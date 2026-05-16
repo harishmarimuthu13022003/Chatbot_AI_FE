@@ -8,6 +8,7 @@ const ChatPage = ({ handleLogout }) => {
   const [currentChatId, setCurrentChatId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchHistory();
@@ -22,7 +23,11 @@ const ChatPage = ({ handleLogout }) => {
     }
   };
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setIsSidebarOpen(false);
+
   const loadChat = async (chatId) => {
+    closeSidebar(); // Close on mobile when selecting
     setCurrentChatId(chatId);
     setLoading(true);
     try {
@@ -83,18 +88,22 @@ const ChatPage = ({ handleLogout }) => {
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${isSidebarOpen ? 'sidebar-active' : ''}`}>
+      <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={closeSidebar}></div>
       <Sidebar 
         chats={chats} 
         currentChatId={currentChatId} 
         onSelectChat={loadChat} 
-        onNewChat={startNewChat}
+        onNewChat={() => { startNewChat(); closeSidebar(); }}
         onLogout={handleLogout}
+        isOpen={isSidebarOpen}
+        onClose={closeSidebar}
       />
       <ChatArea 
         messages={messages} 
         onSendMessage={handleSendMessage} 
         loading={loading}
+        onToggleSidebar={toggleSidebar}
       />
     </div>
   );

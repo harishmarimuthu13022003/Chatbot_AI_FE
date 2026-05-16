@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, Menu } from 'lucide-react';
 
-const ChatArea = ({ messages, onSendMessage, loading }) => {
+const ChatArea = ({ messages, onSendMessage, loading, onToggleSidebar }) => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -30,6 +30,14 @@ const ChatArea = ({ messages, onSendMessage, loading }) => {
 
   return (
     <div className="main-content">
+      {/* Mobile Header */}
+      <div className="mobile-header">
+        <button className="btn-icon" onClick={onToggleSidebar}>
+          <Menu size={24} />
+        </button>
+        <span style={{ marginLeft: 12, fontWeight: 600 }}>CHAT AI</span>
+      </div>
+
       <div className="chat-header">
         CHAT AI
       </div>

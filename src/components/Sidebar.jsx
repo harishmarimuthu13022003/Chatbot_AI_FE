@@ -1,8 +1,8 @@
 import React from 'react';
-import { Plus, MessageSquare, LogOut, User } from 'lucide-react';
+import { Plus, MessageSquare, LogOut, X } from 'lucide-react';
 import { jwtDecode } from "jwt-decode";
 
-const Sidebar = ({ chats, currentChatId, onSelectChat, onNewChat, onLogout }) => {
+const Sidebar = ({ chats, currentChatId, onSelectChat, onNewChat, onLogout, isOpen, onClose }) => {
   // Extract username from token if possible, else default
   let username = "User";
   try {
@@ -14,25 +14,32 @@ const Sidebar = ({ chats, currentChatId, onSelectChat, onNewChat, onLogout }) =>
   } catch (e) {}
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <button className="btn new-chat-btn" onClick={onNewChat}>
           <Plus size={18} />
           New Chat
         </button>
+        <button className="btn-icon close-sidebar-btn" onClick={onClose}>
+          <X size={20} />
+        </button>
       </div>
 
       <div className="history-list">
-        {chats.map(chat => (
-          <div 
-            key={chat.id} 
-            className={`history-item ${currentChatId === chat.id ? 'active' : ''}`}
-            onClick={() => onSelectChat(chat.id)}
-          >
-            <MessageSquare size={16} />
-            <span>{chat.title}</span>
-          </div>
-        ))}
+        {chats.length === 0 ? (
+          <div className="history-empty">No conversations yet</div>
+        ) : (
+          chats.map(chat => (
+            <div 
+              key={chat.id} 
+              className={`history-item ${currentChatId === chat.id ? 'active' : ''}`}
+              onClick={() => onSelectChat(chat.id)}
+            >
+              <MessageSquare size={16} />
+              <span>{chat.title}</span>
+            </div>
+          ))
+        )}
       </div>
 
       <div className="sidebar-footer">
